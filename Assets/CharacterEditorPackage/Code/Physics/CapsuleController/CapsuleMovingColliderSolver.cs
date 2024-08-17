@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using CommonObjects;
+
 //--------------------------------------------------------------------
 //This class solves moving collider support for ControlledCapsuleColliders
 //It uses anchor points (designated by AbilityModules and the CharacterControllerBases) to tether the capsule to a surface.
@@ -14,7 +16,7 @@ public class MovingColPoint
     public Vector3 m_Normal;
     public Vector3 m_PointRelativeToThis;
 }
-public class CapsuleMovingColliderSolver : MonoBehaviour
+public class CapsuleMovingColliderSolver : GamePlayBehaviour
 {
     [SerializeField] ControlledCapsuleCollider m_ControlledCollider;
     [SerializeField] bool m_ApplyRotationCorrection;

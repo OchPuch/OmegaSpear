@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CommonObjects;
+
 //--------------------------------------------------------------------
 //Base class for all entity controllers.
 //Uses a ControlledCollider for movement, and an AbilityModuleManager for movement modules
 //Implemented further in GroundedCharacterController and HoverCharacterController
 //--------------------------------------------------------------------
-public abstract class CharacterControllerBase : MonoBehaviour
+public abstract class CharacterControllerBase : GamePlayBehaviour
 {
     protected DirectionInput m_MovementInput;
     protected PlayerInput m_PlayerInput;

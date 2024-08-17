@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CommonObjects;
+
 //--------------------------------------------------------------------
 //ControlledCollider is the base class of ControlledCapsuleCollider
 //In theory, it can be overriden by different shape colliders, but only capsule has been implemented
 //CharacterControllerBases only have this to access collider functions, modules use ControlledCapsuleCollider
 //--------------------------------------------------------------------
-public abstract class ControlledCollider : MonoBehaviour
+public abstract class ControlledCollider : GamePlayBehaviour
 {
     [Tooltip("Layermask used for all collisions in collider")]
     [SerializeField] protected LayerMask m_LayerMask;

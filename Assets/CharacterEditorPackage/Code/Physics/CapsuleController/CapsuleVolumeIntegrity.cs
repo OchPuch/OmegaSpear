@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CommonObjects;
+
 //--------------------------------------------------------------------
 //This class is in charge of preventing capsule clipping.
 //It uses a Unity capsule collider and rigidbody to track this).
@@ -7,7 +9,7 @@ using System.Collections;
 //It also keeps track of whether the capsule is being squished, which means that it is unrecoverably clipping.
 //Other scripts can fix it then (for example via a death state)
 //--------------------------------------------------------------------
-public class CapsuleVolumeIntegrity : MonoBehaviour {
+public class CapsuleVolumeIntegrity : GamePlayBehaviour {
     [SerializeField] Rigidbody m_RigidBody;
     [SerializeField] ControlledCapsuleCollider m_ControlledCollider;
     [SerializeField] CapsuleCollider m_CapsuleCollider;

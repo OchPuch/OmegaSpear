@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CommonObjects;
+
 //--------------------------------------------------------------------
 //Class which keeps all of the abilitymodules for a character controller
 //The CharacterControllerBase class controls this and asks if there are any applicable modules.
 //Starting, running and ending AbilityModules is done through here, but the current abilitymodule can be requested to get information from.
 //--------------------------------------------------------------------
-public class AbilityModuleManager : MonoBehaviour {
+public class AbilityModuleManager : GamePlayBehaviour {
     [SerializeField] AbilitySlot[] m_AbilitySlots = null;
     Transform m_ModuleParent;
     AbilityModule[] m_AbilityModules;

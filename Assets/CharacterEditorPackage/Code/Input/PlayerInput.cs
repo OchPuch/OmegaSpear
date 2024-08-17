@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CommonObjects;
+
 //--------------------------------------------------------------------
 //PlayerInput uses Unity input (keyboard or controller) to register player input and send it to an CharacterControllerBase
 //--------------------------------------------------------------------
-public class PlayerInput : MonoBehaviour
+public class PlayerInput : GamePlayBehaviour
 {
     [SerializeField] CharacterControllerBase m_CharacterController;
 
