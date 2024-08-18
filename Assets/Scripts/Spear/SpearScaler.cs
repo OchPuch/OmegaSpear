@@ -1,5 +1,6 @@
-﻿using CommonObjects;
-using Unity.VisualScripting;
+﻿using System;
+using CommonObjects;
+using Spear.Data;
 using UnityEngine;
 
 namespace Spear
@@ -10,21 +11,39 @@ namespace Spear
         [field: SerializeField] public Transform HandlePoint { get; private set; }
         [field: SerializeField] public Transform TipPoint { get; private set; }
         [field: SerializeField] public Transform BodyTransform { get; private set; }
+
+        private SpearData _data;
         
         private float _maxExpandScale = 5f;
         private float _minExpandScale = 0.02f;
         private float _baseScale = 1f;
+        private Vector2 _baseHandleLocalPosition;
 
-        protected override void Start()
+        public void Init(SpearData spearData)
         {
-            base.Start();
+            _data = spearData;
+            _baseHandleLocalPosition = HandlePoint.localPosition;
             _baseScale = GetScale();
             SetScale(_baseScale);
         }
 
+        private void LateUpdate()
+        {
+            if (_data.TipPoint.IsLocked)
+            {
+                CenterPoint.transform.right =  (Vector2) (TipPoint.transform.position - HandlePoint.transform.position);
+                UpdateBodySize();
+
+            }
+            else
+            {
+                HandlePoint.localPosition = _baseHandleLocalPosition;
+            }
+        }
+
         public float GetScale()
         {
-            return TipPoint.transform.localPosition.x - HandlePoint.transform.localPosition.x;
+            return Vector2.Distance(HandlePoint.position, TipPoint.position);
         }
 
         public void ChangeScale(float value, float expandMin, float expandMax)
@@ -41,6 +60,11 @@ namespace Spear
 
             if (value > 0)
             {
+                if (_data.TipPoint.IsLocked)
+                {
+                    return;
+                }
+                
                 if (currentScale + value < expandMin)
                     expandMin = currentScale + value;
                 else if (currentScale + value >= expandMax)
@@ -66,25 +90,27 @@ namespace Spear
         public void SetScale(float value, float minExpand, float maxExpand)
         {
             value = Mathf.Clamp(value, minExpand, maxExpand);
-            TipPoint.transform.localPosition = HandlePoint.transform.localPosition +
-                                               new Vector3(value, 0, 0);
-            _minExpandScale = minExpand;
-            _maxExpandScale = maxExpand;
-            UpdateBodySize();
-        }
-
-        public void SetTipPositionWithScaleUpdate(Vector2 position, bool ignoreRestrictions = false)
-        {
-            CenterPoint.transform.right = position - (Vector2)CenterPoint.position;
-            TipPoint.transform.position = position;
-            if (!ignoreRestrictions)
+            if (!_data.TipPoint.IsLocked)
             {
-                SetScale(GetScale());
+                TipPoint.transform.position = HandlePoint.transform.position + HandlePoint.transform.right * value;
+                _minExpandScale = minExpand;
+                _maxExpandScale = maxExpand;
+                UpdateBodySize();
             }
             else
             {
+                HandlePoint.transform.position = TipPoint.transform.position - TipPoint.transform.right * value;
+                _minExpandScale = minExpand;
+                _maxExpandScale = maxExpand;
                 UpdateBodySize();
             }
+        }
+        
+        public void UpdateFat(float scale)
+        {
+            var vector3 = BodyTransform.localScale;
+            vector3.y = scale;
+            BodyTransform.localScale = vector3;
         }
 
         private void UpdateBodySize()

@@ -22,6 +22,7 @@ namespace Spear.States
             base.Enter();
             SpearData.loadTimer = 0f;
             _expandTimer = 0f;
+            if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
         }
         
         public override void HandleRotation()

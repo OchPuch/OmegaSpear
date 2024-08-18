@@ -10,6 +10,7 @@ namespace Spear.Data
         [field: SerializeField] public SpearConfig SpearConfig { get; private set; }
         [field: SerializeField] public Player.Player Player { get; private set; }
         [field: SerializeField] public SpearScaler SpearScaler { get; private set; }
+        [field: SerializeField] public TipPoint TipPoint { get; private set; }
         [field: SerializeField] public Rigidbody CenterRigidbody { get; private set; }
         public Transform CenterTransform => SpearScaler.CenterPoint;
         public bool ExpandRequest { get; private set; }
@@ -23,6 +24,12 @@ namespace Spear.Data
 
         public float loadTimer;
 
+
+        public void Init()
+        {
+            SpearScaler.Init(this);
+            TipPoint.Init(this);
+        }
 
         public void UpdateInput()
         {

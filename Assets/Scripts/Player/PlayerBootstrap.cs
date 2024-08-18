@@ -19,6 +19,7 @@ namespace Player
         {
             player.Init(playerData);
             playerHealth.Init(playerData);
+            spearData.Init();
             spear.Init(spearData);
         }
     }

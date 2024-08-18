@@ -11,11 +11,16 @@ namespace Spear.States
         private SpearStateSettings Settings => SpearData.SpearConfig.NormalSettings;
         private float _holdShrinkTime;
         private float _holdExpandTime;
-
-        private bool _startHoldingExpand;
-
+        
         private bool _consistentShrink;
         private bool _stopped;
+
+        private float ShrinkFactor => Settings.ShrinkingSpeedByHolding.Evaluate(_holdShrinkTime) *
+                                      Settings.ScalingMultiplier *
+                                      Time.deltaTime;
+
+        private float ExpandFactor => Settings.ExpandingSpeedByHolding.Evaluate(_holdExpandTime) *
+                                      Settings.ScalingMultiplier * Time.deltaTime;
 
         private readonly ParticleFactory _particleFactory;
 
@@ -31,7 +36,6 @@ namespace Spear.States
             _holdExpandTime = 0;
             _holdShrinkTime = 0;
 
-            _startHoldingExpand = SpearData.WasExpandRequest;
             _consistentShrink = false;
             _stopped = true;
         }
@@ -40,6 +44,7 @@ namespace Spear.States
         public override void HandleRotation()
         {
             base.HandleRotation();
+            if (SpearData.TipPoint.IsLocked) return;
             Quaternion desiredRotQ = Quaternion.Euler(0, 0, SpearData.desiredRotation);
             Quaternion smoothedRotation = Quaternion.Lerp(SpearData.CenterTransform.rotation, desiredRotQ,
                 Time.deltaTime * Settings.RotationDamping);
@@ -49,29 +54,73 @@ namespace Spear.States
         public override void UpdateScale()
         {
             float scaleFactor = 0;
-
-            if (!SpearData.WasExpandRequest) _startHoldingExpand = false;
-            if (!_startHoldingExpand)
+            
+            if (SpearData.TipPoint.IsLocked)
             {
-                if (SpearData.ExpandRequest)
+                var projectedVelocity = Vector3.Project(SpearData.Player.PlayerData.ControlledCollider.GetVelocity(),
+                    SpearData.SpearScaler.HandlePoint.up);
+                SpearData.Player.PlayerData.ControlledCollider.SetVelocity(projectedVelocity);
+                
+                if (!SpearData.ShrinkRequest)
                 {
-                    if (!SpearData.ShrinkRequest) _stopped = false;
-                    scaleFactor += Settings.ExpandingSpeedByHolding.Evaluate(_holdExpandTime) *
-                                   Settings.ScalingMultiplier * Time.deltaTime;
-                    _holdExpandTime += Time.deltaTime;
+                    _holdShrinkTime = 0;
                 }
-                else
+                
+                if (SpearData.ShrinkRequest && !SpearData.ExpandRequest)
                 {
-                    _holdExpandTime = 0;
+                    _holdShrinkTime += Time.deltaTime;
+                    if (SpearData.TipPoint.IsInHardGround)
+                    {
+                        var velocityToPoint = SpearData.SpearScaler.HandlePoint.right * (Config.StuckShrinkSpeedMultiplier * ShrinkFactor) / Time.deltaTime;
+                        var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
+                        SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityToPoint);
+                        if (SpearData.Scale <= Config.UnstuckFromGroundScale)
+                        {
+                            SpearData.TipPoint.UnLock();
+                        }
+                    }
+                    else if (_holdShrinkTime > Config.ShrinkHoldTimeToUnlock)
+                    {
+                        SpearData.TipPoint.UnLock();
+                    }
                 }
+                
+                return;
+            }
+            
+            if (SpearData.ExpandRequest && SpearData.ShrinkRequest)
+            {
+                if (SpearData.TipPoint.Lock())
+                    return;
+            }
+            
+            
+            if (SpearData.Scale < Settings.MinShrink)
+            {
+                scaleFactor += ExpandFactor;
+            }
+
+            if (SpearData.Scale > Settings.MaxExpand)
+            {
+                scaleFactor -= ShrinkFactor;
+            }
+            
+            if (SpearData.ExpandRequest)
+            {
+                if (!SpearData.ShrinkRequest) _stopped = false;
+                scaleFactor += ExpandFactor;
+                _holdExpandTime += Time.deltaTime;
+            }
+            else
+            {
+                _holdExpandTime = 0;
             }
 
 
             if (SpearData.ShrinkRequest)
             {
                 _consistentShrink = !SpearData.ExpandRequest;
-                scaleFactor -= Settings.ShrinkingSpeedByHolding.Evaluate(_holdShrinkTime) * Settings.ScalingMultiplier *
-                               Time.deltaTime;
+                scaleFactor -= ShrinkFactor;
                 _holdShrinkTime += Time.deltaTime;
             }
             else

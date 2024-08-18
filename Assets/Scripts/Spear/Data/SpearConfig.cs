@@ -8,14 +8,28 @@ namespace Spear.Data
     {
         [field: Header("General")]
         [field: SerializeField] public LayerMask HitMask { get; private set; }
+        [field: SerializeField] public LayerMask LockMask { get; private set; }
+        [field: SerializeField] public LayerMask HardGroundMask { get; private set; }
         [field: SerializeField] public float ImpulsePlayerSpeed { get; private set; }
+        [field: SerializeField] public float MinImpulseScale { get; private set; }
+        [field: SerializeField] public float MaxImpulseScale { get; private set; }
+        [field: SerializeField] public float MaxImpulseChargeTime { get; private set; }
+        [field: SerializeField] public float ShrinkHoldTimeToUnlock { get; private set; }
+        [field: SerializeField] public float UnstuckFromGroundScale { get; private set; }
+        [field: SerializeField] public float StuckShrinkSpeedMultiplier { get; private set; }
+        [field: SerializeField] public float UmbrellaDoubleJump { get; private set; }
+        [field: SerializeField] public float TimeToMaxUmbrellaDoubleJump { get; private set; }
+        [field: SerializeField] public float UmbrellaYSpeed { get; private set; }
         [field: Header("Settings")]
         [field: SerializeField] public SpearStateSettings NormalSettings { get; private set; }
         [field: SerializeField] public SpearStateSettings OnceLoadedSettings { get; private set; }
         [field: SerializeField] public SpearStateSettings TwiceLoadedSettings { get; private set; }
+        [field: SerializeField] public SpearStateSettings UmbrellaSettings { get; private set; }
+
         [field: Header("Transitions")]
         [field: SerializeField] public TransitionSettings ImpulseTransition { get; private set; }
         [field: SerializeField] public TransitionSettings UltraExtendTransition { get; private set; }
+        [field: SerializeField] public TransitionSettings FromUmbrellaToNormalTransition { get; private set; }
         
     }
     

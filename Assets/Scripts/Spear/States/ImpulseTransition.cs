@@ -55,9 +55,10 @@ namespace Spear.States
         {
             _specialActionCommited = true;
             Vector2 spawnEffectPosition = SpearData.SpearScaler.TipPoint.position;
+            float impulseScale = Mathf.Clamp(SpearData.loadTimer / Config.MaxImpulseChargeTime, Config.MinImpulseScale, Config.MaxImpulseScale);
             if (Physics.Raycast(SpearData.CenterTransform.position, SpearData.CenterTransform.right, out var hit, Settings.MaxExpand, SpearData.SpearConfig.HitMask))
             {
-                float force = SpearData.SpearConfig.ImpulsePlayerSpeed;
+                float force = SpearData.SpearConfig.ImpulsePlayerSpeed * impulseScale;
                 spawnEffectPosition = hit.point;
                 
                 if (hit.collider.TryGetComponent<Rigidbody>(out var rb))
@@ -70,12 +71,13 @@ namespace Spear.States
                 }
                 
                 var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
-                if (currentVelocity.y < 0) currentVelocity.y = 0f;
+                currentVelocity.y = 0f;
                 currentVelocity +=  (Vector2) (-SpearData.CenterTransform.right) * force;
                 SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
             }
             
-            _particleFactory.CreateParticleSystem(spawnEffectPosition);
+            var particle = _particleFactory.CreateParticleSystem(spawnEffectPosition);
+            particle.transform.localScale = Vector3.one * impulseScale;
         }
     }
 }

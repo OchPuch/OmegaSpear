@@ -1,11 +1,12 @@
 ﻿using CartoonFX;
+using CommonObjects;
 using UnityEngine;
 using UnityEngine.Pool;
 
 namespace Effects
 {
     [RequireComponent(typeof(ParticleSystem))]
-    public class ParticleHelper : MonoBehaviour
+    public class ParticleHelper : GamePlayBehaviour
     {
         private ObjectPool<ParticleSystem> _pool;
         private ParticleSystem _particleSystem;
