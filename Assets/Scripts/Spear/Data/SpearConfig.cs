@@ -1,10 +1,58 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Spear.Data
 {
     [CreateAssetMenu(menuName = "Spear", fileName = "Spear Config")]
     public class SpearConfig : ScriptableObject
     {
+        [field: Header("General")]
+        [field: SerializeField] public LayerMask HitMask { get; private set; }
+        [field: SerializeField] public float ImpulsePlayerSpeed { get; private set; }
+        [field: Header("Settings")]
+        [field: SerializeField] public SpearStateSettings NormalSettings { get; private set; }
+        [field: SerializeField] public SpearStateSettings OnceLoadedSettings { get; private set; }
+        [field: SerializeField] public SpearStateSettings TwiceLoadedSettings { get; private set; }
+        [field: Header("Transitions")]
+        [field: SerializeField] public TransitionSettings ImpulseTransition { get; private set; }
+        [field: SerializeField] public TransitionSettings UltraExtendTransition { get; private set; }
         
+    }
+    
+    [Serializable]
+    public class SpearStateSettings
+    {
+        [field: Header("Scaling")]
+        [field: SerializeField] public float ScalingMultiplier { get; private set; } = 2f;
+        [field: SerializeField] public AnimationCurve ExpandingSpeedByHolding { get; private set; }
+        
+        [field: SerializeField] public AnimationCurve FatingSpeedWhileExpanding { get; private set; }
+        [field: SerializeField] public AnimationCurve ShrinkingSpeedByHolding { get; private set; }
+        
+        [field: SerializeField] public AnimationCurve FatingSpeedWhileShrinking { get; private set; }
+        [field: SerializeField] public float MaxExpand { get; private set; }
+        [field: SerializeField] public float MinShrink { get; private set; }
+        [field: SerializeField] public float MinScaleToChangeState { get; private set; }
+
+        [field: Header("Rotation")]
+        [field: SerializeField] public float RotationDamping { get; private set; }
+        
+        [field: Header("Effects")]
+        [field: SerializeField] public ParticleSystem StopEffect { get; private set; }
+        [field: SerializeField] public AudioClip StopSound { get; private set; }
+    }
+
+    [Serializable]
+    public class TransitionSettings
+    {
+        [field: SerializeField] public float RotationDamping { get; private set; } = 45f;
+        [field: SerializeField] public AnimationCurve Transition { get; private set; }
+        [field: SerializeField] public AnimationCurve FatingWileTransition { get; private set; }
+        [field: SerializeField] public float SpecialActionTime { get; private set; }
+        [field: SerializeField] public ParticleSystem SpecialEffect { get; private set; }
+        [field: SerializeField] public AudioClip SpecialSound { get; private set; }
+        
+        [field: SerializeField] public float MaxExpand { get; private set; }
+        [field: SerializeField] public float MinShrink { get; private set; }
     }
 }

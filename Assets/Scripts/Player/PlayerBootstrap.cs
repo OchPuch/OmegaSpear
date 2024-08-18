@@ -1,15 +1,25 @@
-﻿using UnityEngine;
+﻿using Player.Data;
+using Spear.Data;
+using UnityEngine;
 
 namespace Player
 {
     public class PlayerBootstrap : MonoBehaviour
     {
-        [SerializeField] private Spear.Spear spear;
+        [Header("Player")]
+        [SerializeField] private PlayerData playerData;
         [SerializeField] private Player player;
+        [SerializeField] private PlayerHealth playerHealth;
+
+        [Header("Other")] 
+        [SerializeField] private SpearData spearData;
+        [SerializeField] private Spear.Spear spear;
         
         private void Awake()
         {
-            spear.Init();
+            player.Init(playerData);
+            playerHealth.Init(playerData);
+            spear.Init(spearData);
         }
     }
 }
