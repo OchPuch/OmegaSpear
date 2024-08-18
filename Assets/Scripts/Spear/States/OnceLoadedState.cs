@@ -56,6 +56,7 @@ namespace Spear.States
                 _expandTimer += Time.deltaTime;
                 SpearData.loadTimer -= Time.deltaTime;
             }
+            
 
             if (SpearData.Scale + scaleFactor < Settings.MinScaleToChangeState && SpearData.ShrinkRequest)
             {

@@ -43,6 +43,7 @@ namespace Spear.States
             if (_transitionTimer >= Settings.SpecialActionTime && !_specialActionCommited)
             {
                 DoubleJump();
+                _specialActionCommited = true;
             }
             if (_transitionTimer >= _transitionTime)
             {

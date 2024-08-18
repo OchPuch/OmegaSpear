@@ -1,6 +1,7 @@
 ﻿using Spear.Data;
 using Spear.States.General;
 using StateMachine;
+using Unity.VisualScripting;
 using UnityEngine;
 using Utils;
 
@@ -9,14 +10,15 @@ namespace Spear.States
     public class UmbrellaState : SpearState
     {
         private bool _startHoldingExpand;
-        
+
         private float _holdShrinkTime;
         private float _holdExpandTime;
-        
+
         private SpearStateSettings Settings => SpearData.SpearConfig.UmbrellaSettings;
-        public UmbrellaState(IStateSwitcher stateSwitcher, SpearData spearData, Spear spear) : base(stateSwitcher, spearData, spear)
+
+        public UmbrellaState(IStateSwitcher stateSwitcher, SpearData spearData, Spear spear) : base(stateSwitcher,
+            spearData, spear)
         {
-            
         }
 
         public override void Enter()
@@ -44,7 +46,7 @@ namespace Spear.States
             {
                 SpearData.loadTimer += Time.deltaTime;
             }
-            
+
             if (!SpearData.WasExpandRequest) _startHoldingExpand = false;
             if (!_startHoldingExpand)
             {
@@ -54,17 +56,14 @@ namespace Spear.States
                 }
             }
 
-            if (VectorUtils.AreCodirected(Vector2.up, SpearData.SpearScaler.HandlePoint.right))
-            {
-                var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
-                if (currentVelocity.y < 0)
-                {
-                    var velocityY = Vector3.Project(SpearData.SpearScaler.HandlePoint.right * Config.UmbrellaYSpeed, Vector2.up);
-                    currentVelocity.y = velocityY.y;
-                    SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
-                }
-            }
-            
+
+            var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
+            var velocityBaseAdd = (Vector2) (SpearData.SpearConfig.UmbrellaYSpeed * SpearData.SpearScaler.HandlePoint.right) * Time.deltaTime;
+            var velocityAdd = Vector3.Project(velocityBaseAdd, Vector2.up);
+            if (velocityAdd.y < 0)  velocityAdd.y = 0;
+            SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityAdd);
+
+
             SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
         }
     }
