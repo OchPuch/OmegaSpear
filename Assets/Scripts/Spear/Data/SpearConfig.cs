@@ -21,6 +21,13 @@ namespace Spear.Data
         [field: SerializeField] public float UmbrellaDoubleJump { get; private set; }
         [field: SerializeField] public float TimeToMaxUmbrellaDoubleJump { get; private set; }
         [field: SerializeField] public float UmbrellaYSpeed { get; private set; }
+        
+        [field: SerializeField] public float UmbrellaMaxTimeCharge { get; private set; } = 2f;
+        
+        [field: SerializeField] public AnimationCurve UmbrellaYSpeedByCharge { get; private set; }
+        
+        [field: SerializeField] public AnimationCurve UmbrellaDoubleJumpByCharge { get; private set; }
+        
         [field: Header("Settings")]
         [field: SerializeField] public SpearStateSettings NormalSettings { get; private set; }
         [field: SerializeField] public SpearStateSettings OnceLoadedSettings { get; private set; }

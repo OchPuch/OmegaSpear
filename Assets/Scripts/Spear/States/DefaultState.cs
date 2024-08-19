@@ -74,10 +74,6 @@ namespace Spear.States
                         var velocityToPoint = SpearData.SpearScaler.HandlePoint.right * (Config.StuckShrinkSpeedMultiplier * ShrinkFactor) / Time.deltaTime;
                         var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
                         SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityToPoint);
-                        if (SpearData.Scale <= Config.UnstuckFromGroundScale)
-                        {
-                            SpearData.TipPoint.UnLock();
-                        }
                     }
                     else if (_holdShrinkTime > Config.ShrinkHoldTimeToUnlock)
                     {
@@ -85,13 +81,21 @@ namespace Spear.States
                     }
                 }
                 
+                if (SpearData.Scale <= Config.UnstuckFromGroundScale)
+                {
+                    SpearData.TipPoint.UnLock();
+                }
+                
                 return;
             }
             
             if (SpearData.ExpandRequest && SpearData.ShrinkRequest)
             {
-                if (SpearData.TipPoint.Lock())
-                    return;
+                if (SpearData.TipPoint.CanBeLocked)
+                {
+                    SpearData.TipPoint.Lock();
+                }
+                return;
             }
             
             

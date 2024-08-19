@@ -32,6 +32,11 @@ namespace Spear.States
             SpearData.CenterTransform.rotation = smoothedRotation;
         }
         
+        public override void Enter()
+        {
+            base.Enter();
+            if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
+        }
         
         public override void Update()
         {

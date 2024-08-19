@@ -28,6 +28,7 @@ namespace Spear.States.General
 
         public virtual void Update()
         {
+            SpearData.AddUmbrellaCharge(Time.deltaTime);
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 StateSwitcher.SwitchState<FromAnyToUmbrellaTransition>();

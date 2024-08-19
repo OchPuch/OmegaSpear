@@ -22,9 +22,9 @@ namespace Spear.Data
         public float Scale => SpearScaler.GetScale();
 
 
+        public float umbrellaCharge { get; private set; }
         public float loadTimer;
-
-
+        
         public void Init()
         {
             SpearScaler.Init(this);
@@ -35,6 +35,12 @@ namespace Spear.Data
         {
             ExpandRequest = Input.GetMouseButton(0);
             ShrinkRequest = Input.GetMouseButton(1);
+        }
+
+        public void AddUmbrellaCharge(float add)
+        {
+            umbrellaCharge += add;
+            umbrellaCharge = Mathf.Clamp(umbrellaCharge, 0, SpearConfig.UmbrellaMaxTimeCharge);
         }
 
         public void SaveLastInput()

@@ -69,7 +69,7 @@ namespace Spear.States
             {
                 if (SpearData.Scale + scaleFactor > Settings.MaxExpand)
                 {
-                    _particleFactory.CreateParticleSystem(SpearData.SpearScaler.HandlePoint.position);
+                    _particleFactory.CreateParticleSystem(SpearData.SpearScaler.TipPoint.position);
                     SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
                     StateSwitcher.SwitchState<DefaultState>();
                 }

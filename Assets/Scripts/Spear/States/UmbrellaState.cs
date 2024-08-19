@@ -26,7 +26,10 @@ namespace Spear.States
             base.Enter();
             if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
             _startHoldingExpand = SpearData.WasExpandRequest;
-            SpearData.loadTimer = 0f;
+        }
+
+        public override void Update()
+        {
         }
 
         public override void HandleRotation()
@@ -48,15 +51,22 @@ namespace Spear.States
                 return;
             }
             
-            SpearData.loadTimer += Time.deltaTime;
-            
+            var umbrellaCharge01 = Mathf.Clamp01(SpearData.umbrellaCharge / Config.UmbrellaMaxTimeCharge);
+            var chargeScaleSpeed = Config.UmbrellaYSpeedByCharge.Evaluate(umbrellaCharge01);
             var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
-            var velocityBaseAdd = (Vector2) (SpearData.SpearConfig.UmbrellaYSpeed * SpearData.SpearScaler.HandlePoint.right) * Time.deltaTime;
-            var velocityAdd = Vector3.Project(velocityBaseAdd, Vector2.up);
-            if (velocityAdd.y < 0)  velocityAdd.y = 0;
-            SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityAdd);
+            var velocityBaseAdd = (Vector2) (SpearData.SpearScaler.HandlePoint.right * (SpearData.SpearConfig.UmbrellaYSpeed * chargeScaleSpeed * Time.deltaTime));
+            if (velocityBaseAdd.y < 0)  velocityBaseAdd.y = 0;
+            SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityBaseAdd);
             SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
-            
+
+            if (SpearData.Player.PlayerData.ControlledCollider.IsGrounded())
+            {
+                SpearData.AddUmbrellaCharge(Time.deltaTime);
+            }
+            else
+            {
+                SpearData.AddUmbrellaCharge(-Time.deltaTime);
+            }
             
         }
     }

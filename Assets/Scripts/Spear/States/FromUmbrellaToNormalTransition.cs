@@ -58,7 +58,7 @@ namespace Spear.States
 
         private void DoubleJump()
         {
-            float jumpScale = Mathf.Lerp(0, 1, SpearData.loadTimer / Config.TimeToMaxUmbrellaDoubleJump);
+            float jumpScale = Config.UmbrellaDoubleJumpByCharge.Evaluate(Mathf.Clamp01(SpearData.umbrellaCharge / Config.UmbrellaMaxTimeCharge));
             var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
             currentVelocity += (Vector2) SpearData.SpearScaler.HandlePoint.right * (Config.UmbrellaDoubleJump * jumpScale);
             SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);

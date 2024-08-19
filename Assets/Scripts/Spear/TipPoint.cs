@@ -12,11 +12,13 @@ namespace Spear
         private Transform _baseParent;
         private Transform _lastOtherObject;
         private float _lockedScale;
+        private bool _forceLocked;
         
         public bool IsInHardGround { get; private set; }
         public bool CanBeLocked { get; private set; }
         public bool IsLocked { get; private set; }
         
+       
 
         public void Init(SpearData spearData)
         {
@@ -24,20 +26,24 @@ namespace Spear
             _baseParent = transform.parent;
         }
 
-        public bool Lock()
+        public void Lock(bool forceSolidGround = false)
         {
-            if (!CanBeLocked) return false;
-            if (IsLocked) return true;
+            if (IsLocked) return;
+            if (forceSolidGround)
+            {
+                IsInHardGround = true;
+                _forceLocked = true;
+            }
             _lockedScale = _data.Scale;
             IsLocked = true;
             transform.SetParent(_lastOtherObject);
-            return true;
         }
 
         public void UnLock()
         {
             if (!IsLocked) return;
             IsLocked = false;
+            _forceLocked = false;
             CanBeLocked = false;
             IsInHardGround = false;
             transform.SetParent(_baseParent);
@@ -66,6 +72,11 @@ namespace Spear
 
         private void OnTriggerExit(Collider other)
         {
+            if (_forceLocked)
+            {
+                return;
+            }
+            
             if (LayerUtils.IsInLayerMask(other.gameObject.layer, _data.SpearConfig.HardGroundMask))
             {
                 CanBeLocked = false;

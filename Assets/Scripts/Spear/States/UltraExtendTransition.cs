@@ -3,6 +3,7 @@ using Spear.Data;
 using Spear.States.General;
 using StateMachine;
 using UnityEngine;
+using Utils;
 
 namespace Spear.States
 {
@@ -14,6 +15,7 @@ namespace Spear.States
         private readonly float _transitionTime;
         private readonly ParticleFactory _particleFactory;
         private bool _shouldBeLocked;
+        private bool _hitSolidGround;
         
         public UltraExtendTransition(IStateSwitcher stateSwitcher, SpearData spearData, Spear spear) : base(stateSwitcher, spearData, spear)
         {
@@ -26,6 +28,8 @@ namespace Spear.States
         {
             base.Enter();
             _transitionTimer = 0f;
+            _shouldBeLocked = false;
+            _hitSolidGround = false;
             CalculateMaxScale();
         }
 
@@ -42,7 +46,10 @@ namespace Spear.States
                 var hitPoint = hit.point;
                 _particleFactory.CreateParticleSystem(hitPoint);
                 _maxScale = Vector2.Distance(SpearData.SpearScaler.HandlePoint.position, hitPoint);
-                _shouldBeLocked = true;
+                _shouldBeLocked =
+                    LayerUtils.IsInLayerMask(hit.collider.gameObject.layer, SpearData.SpearConfig.LockMask);
+                _hitSolidGround =
+                    LayerUtils.IsInLayerMask(hit.collider.gameObject.layer, SpearData.SpearConfig.HardGroundMask);
             }
             
         }
@@ -62,10 +69,9 @@ namespace Spear.States
             if (_shouldBeLocked)
             {
                 SpearData.SpearScaler.SetScale(_maxScale, Settings.MinShrink, _maxScale);
-                if (SpearData.TipPoint.Lock())
-                {
-                    StateSwitcher.SwitchState<DefaultState>();
-                }
+                SpearData.TipPoint.Lock(_hitSolidGround);
+                StateSwitcher.SwitchState<DefaultState>();
+                return;
             }
             else
             {
