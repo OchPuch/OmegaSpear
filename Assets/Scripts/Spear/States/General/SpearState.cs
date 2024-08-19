@@ -1,5 +1,6 @@
 ﻿using Spear.Data;
 using StateMachine;
+using UnityEngine;
 
 namespace Spear.States.General
 {
@@ -27,6 +28,10 @@ namespace Spear.States.General
 
         public virtual void Update()
         {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                StateSwitcher.SwitchState<FromAnyToUmbrellaTransition>();
+            }
         }
 
         public virtual void HandleRotation()

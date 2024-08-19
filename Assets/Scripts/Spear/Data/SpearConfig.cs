@@ -1,4 +1,5 @@
 ﻿using System;
+using Spear.States.General;
 using UnityEngine;
 
 namespace Spear.Data
@@ -25,6 +26,7 @@ namespace Spear.Data
         [field: SerializeField] public SpearStateSettings OnceLoadedSettings { get; private set; }
         [field: SerializeField] public SpearStateSettings TwiceLoadedSettings { get; private set; }
         [field: SerializeField] public SpearStateSettings UmbrellaSettings { get; private set; }
+        [field: SerializeField] public SpearStateSettings FromAnyToUmbrellaSettings { get; private set; }
 
         [field: Header("Transitions")]
         [field: SerializeField] public TransitionSettings ImpulseTransition { get; private set; }

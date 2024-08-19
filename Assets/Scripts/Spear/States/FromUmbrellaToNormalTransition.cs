@@ -19,12 +19,17 @@ namespace Spear.States
             _particleFactory = new ParticleFactory(Settings.SpecialEffect);
             _transitionTime = Settings.Transition.keys[^1].time;
         }
+        
+        public override void Update()
+        {
+        }
 
         public override void Enter()
         {
             base.Enter();
             _transitionTimer = 0f;
             _specialActionCommited = false;
+            if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
         }
         public override void HandleRotation()
         {

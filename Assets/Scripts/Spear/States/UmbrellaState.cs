@@ -42,29 +42,22 @@ namespace Spear.States
         {
             float scaleFactor = 0;
 
-            if (SpearData.ShrinkRequest)
+            if (!Input.GetKey(KeyCode.LeftShift))
             {
-                SpearData.loadTimer += Time.deltaTime;
+                StateSwitcher.SwitchState<FromUmbrellaToNormalTransition>();
+                return;
             }
-
-            if (!SpearData.WasExpandRequest) _startHoldingExpand = false;
-            if (!_startHoldingExpand)
-            {
-                if (SpearData.ExpandRequest)
-                {
-                    StateSwitcher.SwitchState<FromUmbrellaToNormalTransition>();
-                }
-            }
-
-
+            
+            SpearData.loadTimer += Time.deltaTime;
+            
             var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
             var velocityBaseAdd = (Vector2) (SpearData.SpearConfig.UmbrellaYSpeed * SpearData.SpearScaler.HandlePoint.right) * Time.deltaTime;
             var velocityAdd = Vector3.Project(velocityBaseAdd, Vector2.up);
             if (velocityAdd.y < 0)  velocityAdd.y = 0;
             SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityAdd);
-
-
             SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
+            
+            
         }
     }
 }

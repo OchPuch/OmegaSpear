@@ -18,7 +18,9 @@ namespace Spear.States.General
                 new ImpulseTransition(this, spearData, spear),
                 new UltraExtendTransition(this, spearData, spear),
                 new UmbrellaState(this, spearData, spear),
-                new FromUmbrellaToNormalTransition(this, spearData, spear)
+                new FromUmbrellaToNormalTransition(this, spearData, spear),
+                new FromAnyToUmbrellaTransition(this, spearData, spear)
+                
             });
 
             CurrentState = States[0];

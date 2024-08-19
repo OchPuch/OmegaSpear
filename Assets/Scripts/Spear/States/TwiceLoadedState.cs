@@ -56,16 +56,7 @@ namespace Spear.States
                 SpearData.loadTimer -= Time.deltaTime;
             }
             
-            Debug.Log(scaleFactor);
-
-            if (SpearData.Scale + scaleFactor < Settings.MinScaleToChangeState && SpearData.ShrinkRequest)
-            {
-                if (!SpearData.WasShrinkRequest)
-                {
-                    StateSwitcher.SwitchState<UmbrellaState>();
-                }
-            }
-            else if (scaleFactor > 0)
+            if (scaleFactor > 0)
             {
                 if (SpearData.Scale + scaleFactor > Settings.MaxExpand)
                 {

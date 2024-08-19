@@ -28,8 +28,12 @@ namespace Spear.States
             _transitionTimer = 0f;
             CalculateMaxScale();
         }
-        
-        
+
+        public override void Update()
+        {
+        }
+
+
         private void CalculateMaxScale()
         {
             _maxScale = Settings.MaxExpand;
