@@ -17,6 +17,7 @@ namespace Spear
         private float _maxExpandScale = 5f;
         private float _minExpandScale = 0.02f;
         private float _baseScale = 1f;
+        private float _baseScaleY;
         private Vector2 _baseHandleLocalPosition;
 
         public void Init(SpearData spearData)
@@ -24,6 +25,7 @@ namespace Spear
             _data = spearData;
             _baseHandleLocalPosition = HandlePoint.localPosition;
             _baseScale = GetScale();
+            _baseScaleY = BodyTransform.localScale.y;
             SetScale(_baseScale);
         }
 
@@ -109,7 +111,7 @@ namespace Spear
         public void UpdateFat(float scale)
         {
             var vector3 = BodyTransform.localScale;
-            vector3.y = scale;
+            vector3.y = scale * _baseScaleY;
             BodyTransform.localScale = vector3;
         }
 

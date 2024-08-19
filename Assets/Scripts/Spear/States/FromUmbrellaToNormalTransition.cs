@@ -43,7 +43,7 @@ namespace Spear.States
 
         public override void UpdateScale()
         {
-            _transitionTimer += Time.deltaTime;
+            SpearData.SpearScaler.UpdateFat(Settings.FatingWileTransition.Evaluate(_transitionTimer));
             SpearData.SpearScaler.SetScale(Settings.Transition.Evaluate(_transitionTimer), Settings.MinShrink, Settings.MaxExpand);
             if (_transitionTimer >= Settings.SpecialActionTime && !_specialActionCommited)
             {
@@ -54,6 +54,7 @@ namespace Spear.States
             {
                 StateSwitcher.SwitchState<DefaultState>();
             }
+            _transitionTimer += Time.deltaTime;
         }
 
         private void DoubleJump()
@@ -63,6 +64,7 @@ namespace Spear.States
             currentVelocity += (Vector2) SpearData.SpearScaler.HandlePoint.right * (Config.UmbrellaDoubleJump * jumpScale);
             SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
             _particleFactory.CreateParticleSystem(SpearData.SpearScaler.HandlePoint.position);
+            SpearData.AddUmbrellaCharge(-SpearData.umbrellaCharge/4f);
 
         }
     }

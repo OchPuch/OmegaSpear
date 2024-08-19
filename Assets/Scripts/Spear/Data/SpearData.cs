@@ -12,19 +12,20 @@ namespace Spear.Data
         [field: SerializeField] public SpearScaler SpearScaler { get; private set; }
         [field: SerializeField] public TipPoint TipPoint { get; private set; }
         [field: SerializeField] public Rigidbody CenterRigidbody { get; private set; }
+        [field: SerializeField] public AudioSource AudioSource { get; private set; }
         public Transform CenterTransform => SpearScaler.CenterPoint;
         public bool ExpandRequest { get; private set; }
         public bool ShrinkRequest { get; private set; }
-        
+
         public bool WasExpandRequest { get; private set; }
         public bool WasShrinkRequest { get; private set; }
-        
+
         public float Scale => SpearScaler.GetScale();
 
 
         public float umbrellaCharge { get; private set; }
         public float loadTimer;
-        
+
         public void Init()
         {
             SpearScaler.Init(this);
@@ -49,6 +50,4 @@ namespace Spear.Data
             WasShrinkRequest = ShrinkRequest;
         }
     }
-
-    
 }

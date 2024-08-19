@@ -12,8 +12,7 @@ namespace Spear.Data
         [field: SerializeField] public LayerMask LockMask { get; private set; }
         [field: SerializeField] public LayerMask HardGroundMask { get; private set; }
         [field: SerializeField] public float ImpulsePlayerSpeed { get; private set; }
-        [field: SerializeField] public float MinImpulseScale { get; private set; }
-        [field: SerializeField] public float MaxImpulseScale { get; private set; }
+        [field: SerializeField] public AnimationCurve ImpulseScaleByCharge { get; private set; }
         [field: SerializeField] public float MaxImpulseChargeTime { get; private set; }
         [field: SerializeField] public float ShrinkHoldTimeToUnlock { get; private set; }
         [field: SerializeField] public float UnstuckFromGroundScale { get; private set; }
@@ -27,7 +26,9 @@ namespace Spear.Data
         [field: SerializeField] public AnimationCurve UmbrellaYSpeedByCharge { get; private set; }
         
         [field: SerializeField] public AnimationCurve UmbrellaDoubleJumpByCharge { get; private set; }
-        
+        [field: Header("Visuals")]
+        [field: SerializeField] public AnimationCurve ShakeIntro { get; private set; }
+        [field: SerializeField] public AnimationCurve ShakeLoop { get; private set; }
         [field: Header("Settings")]
         [field: SerializeField] public SpearStateSettings NormalSettings { get; private set; }
         [field: SerializeField] public SpearStateSettings OnceLoadedSettings { get; private set; }

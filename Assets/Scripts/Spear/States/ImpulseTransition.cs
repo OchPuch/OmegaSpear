@@ -43,7 +43,7 @@ namespace Spear.States
         {
             _transitionTimer += Time.deltaTime;
             SpearData.SpearScaler.SetScale(Settings.Transition.Evaluate(_transitionTimer), Settings.MinShrink, Settings.MaxExpand);
-
+            SpearData.SpearScaler.UpdateFat(Settings.FatingWileTransition.Evaluate(_transitionTimer));
             if (_transitionTimer >= Settings.SpecialActionTime && !_specialActionCommited)
             {
                 CreateImpulse();
@@ -59,7 +59,8 @@ namespace Spear.States
         {
             _specialActionCommited = true;
             Vector2 spawnEffectPosition = SpearData.SpearScaler.TipPoint.position;
-            float impulseScale = Mathf.Clamp(SpearData.loadTimer / Config.MaxImpulseChargeTime, Config.MinImpulseScale, Config.MaxImpulseScale);
+            float impulseScale =
+                Config.ImpulseScaleByCharge.Evaluate(SpearData.loadTimer / Config.MaxImpulseChargeTime);
             if (Physics.Raycast(SpearData.CenterTransform.position, SpearData.CenterTransform.right, out var hit, Settings.MaxExpand, SpearData.SpearConfig.HitMask))
             {
                 float force = SpearData.SpearConfig.ImpulsePlayerSpeed * impulseScale;

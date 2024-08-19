@@ -10,17 +10,25 @@ namespace Spear.States
     {
         private float _expandTimer = 0f;
         private readonly ParticleFactory _particleFactory;
+        private float _shakeTimer;
+        private bool _passedShakeIntro;
+        private readonly float _loopShakeTime;
+        private readonly float _introShakeTime;
         
         private SpearStateSettings Settings => SpearData.SpearConfig.TwiceLoadedSettings;
         public TwiceLoadedState(IStateSwitcher stateSwitcher, SpearData spearData, Spear spear) : base(stateSwitcher, spearData, spear)
         {
             _particleFactory = new ParticleFactory(Settings.StopEffect);
+            _introShakeTime = Config.ShakeIntro.keys[^1].time;
+            _loopShakeTime = Config.ShakeLoop.keys[^1].time;
         }
 
         public override void Enter()
         {
             base.Enter();
             _expandTimer = 0f;
+            _passedShakeIntro = false;
+            _shakeTimer = 0f;
             if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
         }
 
@@ -40,6 +48,7 @@ namespace Spear.States
                 if (!SpearData.WasExpandRequest && SpearData.Scale < Settings.MinScaleToChangeState)
                 {
                     StateSwitcher.SwitchState<UltraExtendTransition>();
+                    return;
                 }
             }
             
@@ -47,6 +56,7 @@ namespace Spear.States
             {
                 scaleFactor -= Settings.ShrinkingSpeedByHolding.Evaluate(SpearData.loadTimer) * Settings.ScalingMultiplier * Time.deltaTime;
                 SpearData.loadTimer += Time.deltaTime;
+                _shakeTimer += Time.deltaTime;
                 _expandTimer = 0f;
             }
             else
@@ -54,6 +64,8 @@ namespace Spear.States
                 scaleFactor += Settings.ExpandingSpeedByHolding.Evaluate(_expandTimer) * Settings.ScalingMultiplier * Time.deltaTime;
                 _expandTimer += Time.deltaTime;
                 SpearData.loadTimer -= Time.deltaTime;
+                _shakeTimer = 0f;
+                _passedShakeIntro = false;
             }
             
             if (scaleFactor > 0)
@@ -65,6 +77,21 @@ namespace Spear.States
                     StateSwitcher.SwitchState<DefaultState>();
                 }
             }
+            
+            if (_shakeTimer > _introShakeTime && !_passedShakeIntro)
+            {
+                _shakeTimer = 0;
+                _passedShakeIntro = true;
+            }
+            
+            if (_shakeTimer > _loopShakeTime && _passedShakeIntro)
+            {
+                _shakeTimer = 0f;
+            }
+
+            SpearData.SpearScaler.UpdateFat(_passedShakeIntro
+                ? Config.ShakeLoop.Evaluate(_shakeTimer)
+                : Config.ShakeIntro.Evaluate(_shakeTimer));
             
             SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
         }

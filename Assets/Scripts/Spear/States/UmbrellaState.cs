@@ -9,11 +9,7 @@ namespace Spear.States
 {
     public class UmbrellaState : SpearState
     {
-        private bool _startHoldingExpand;
-
-        private float _holdShrinkTime;
-        private float _holdExpandTime;
-
+        
         private SpearStateSettings Settings => SpearData.SpearConfig.UmbrellaSettings;
 
         public UmbrellaState(IStateSwitcher stateSwitcher, SpearData spearData, Spear spear) : base(stateSwitcher,
@@ -25,7 +21,6 @@ namespace Spear.States
         {
             base.Enter();
             if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
-            _startHoldingExpand = SpearData.WasExpandRequest;
         }
 
         public override void Update()
@@ -58,7 +53,7 @@ namespace Spear.States
             if (velocityBaseAdd.y < 0)  velocityBaseAdd.y = 0;
             SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityBaseAdd);
             SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
-
+            SpearData.SpearScaler.UpdateFat(Settings.FatingSpeedWhileExpanding.Evaluate(umbrellaCharge01));
             if (SpearData.Player.PlayerData.ControlledCollider.IsGrounded())
             {
                 SpearData.AddUmbrellaCharge(Time.deltaTime);
