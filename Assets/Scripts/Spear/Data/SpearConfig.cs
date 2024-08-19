@@ -8,6 +8,9 @@ namespace Spear.Data
     public class SpearConfig : ScriptableObject
     {
         [field: Header("General")]
+        [field: SerializeField] public float DamageBySpeedMultiplier { get; private set; }
+        [field: SerializeField] public float MaxDamage { get; private set; }
+
         [field: SerializeField] public LayerMask HitMask { get; private set; }
         [field: SerializeField] public LayerMask LockMask { get; private set; }
         [field: SerializeField] public LayerMask HardGroundMask { get; private set; }
@@ -63,7 +66,8 @@ namespace Spear.Data
         
         [field: Header("Effects")]
         [field: SerializeField] public ParticleSystem StopEffect { get; private set; }
-        [field: SerializeField] public AudioClip StopSound { get; private set; }
+        [field: SerializeField] public AudioClip SpecialSound1 { get; private set; }
+        [field: SerializeField] public AudioClip SpecialSound2 { get; private set; }
     }
 
     [Serializable]
@@ -75,7 +79,8 @@ namespace Spear.Data
         [field: SerializeField] public float SpecialActionTime { get; private set; }
         [field: SerializeField] public ParticleSystem SpecialEffect { get; private set; }
         [field: SerializeField] public AudioClip SpecialSound { get; private set; }
-        
+        [field: SerializeField] public AudioClip SpecialSound2 { get; private set; }
+
         [field: SerializeField] public float MaxExpand { get; private set; }
         [field: SerializeField] public float MinShrink { get; private set; }
     }

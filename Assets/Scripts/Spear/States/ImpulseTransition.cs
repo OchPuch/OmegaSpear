@@ -83,6 +83,7 @@ namespace Spear.States
             
             var particle = _particleFactory.CreateParticleSystem(spawnEffectPosition);
             particle.transform.localScale = Vector3.one * impulseScale;
+            SpearData.AudioSource.PlayOneShot(Settings.SpecialSound);
         }
     }
 }

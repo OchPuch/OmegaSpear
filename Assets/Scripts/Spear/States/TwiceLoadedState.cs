@@ -72,6 +72,7 @@ namespace Spear.States
             {
                 if (SpearData.Scale + scaleFactor > Settings.MaxExpand)
                 {
+                    SpearData.AudioSource.PlayOneShot(Settings.SpecialSound1);
                     _particleFactory.CreateParticleSystem(SpearData.SpearScaler.HandlePoint.position);
                     SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
                     StateSwitcher.SwitchState<DefaultState>();

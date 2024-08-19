@@ -136,7 +136,7 @@ namespace Spear.States
             if (_consistentShrink && !_stopped && SpearData.Scale + scaleFactor < Settings.MinScaleToChangeState)
             {
                 _stopped = true;
-                SpearData.AudioSource.PlayOneShot(Settings.StopSound);
+                SpearData.AudioSource.PlayOneShot(Settings.SpecialSound1);
                 _particleFactory.CreateParticleSystem(SpearData.SpearScaler.HandlePoint.position);
             }
 

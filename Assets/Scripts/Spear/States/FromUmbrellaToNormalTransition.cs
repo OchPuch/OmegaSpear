@@ -59,13 +59,13 @@ namespace Spear.States
 
         private void DoubleJump()
         {
-            float jumpScale = Config.UmbrellaDoubleJumpByCharge.Evaluate(Mathf.Clamp01(SpearData.umbrellaCharge / Config.UmbrellaMaxTimeCharge));
+            float jumpScale = Config.UmbrellaDoubleJumpByCharge.Evaluate(Mathf.Clamp01(SpearData.UmbrellaCharge / Config.UmbrellaMaxTimeCharge));
             var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
             currentVelocity += (Vector2) SpearData.SpearScaler.HandlePoint.right * (Config.UmbrellaDoubleJump * jumpScale);
             SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
             _particleFactory.CreateParticleSystem(SpearData.SpearScaler.HandlePoint.position);
-            SpearData.AddUmbrellaCharge(-SpearData.umbrellaCharge/4f);
-
+            SpearData.AddUmbrellaCharge(-SpearData.UmbrellaCharge/4f);
+            SpearData.AudioSource.PlayOneShot(Settings.SpecialSound);
         }
     }
 }

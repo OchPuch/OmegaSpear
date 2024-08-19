@@ -21,6 +21,7 @@ namespace Spear.States
         {
             base.Enter();
             if (SpearData.TipPoint.IsLocked) SpearData.TipPoint.UnLock();
+            SpearData.AudioSource.PlayOneShot(Settings.SpecialSound1);
         }
 
         public override void Update()
@@ -46,7 +47,7 @@ namespace Spear.States
                 return;
             }
             
-            var umbrellaCharge01 = Mathf.Clamp01(SpearData.umbrellaCharge / Config.UmbrellaMaxTimeCharge);
+            var umbrellaCharge01 = Mathf.Clamp01(SpearData.UmbrellaCharge / Config.UmbrellaMaxTimeCharge);
             var chargeScaleSpeed = Config.UmbrellaYSpeedByCharge.Evaluate(umbrellaCharge01);
             var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
             var velocityBaseAdd = (Vector2) (SpearData.SpearScaler.HandlePoint.right * (SpearData.SpearConfig.UmbrellaYSpeed * chargeScaleSpeed * Time.deltaTime));

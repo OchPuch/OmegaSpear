@@ -44,12 +44,18 @@ namespace Spear.States
             if (Physics.Raycast(SpearData.CenterTransform.position, SpearData.CenterTransform.right, out var hit, Settings.MaxExpand, SpearData.SpearConfig.HitMask))
             {
                 var hitPoint = hit.point;
+                SpearData.AudioSource.PlayOneShot(Settings.SpecialSound);
+
                 _particleFactory.CreateParticleSystem(hitPoint);
                 _maxScale = Vector2.Distance(SpearData.SpearScaler.HandlePoint.position, hitPoint);
                 _shouldBeLocked =
                     LayerUtils.IsInLayerMask(hit.collider.gameObject.layer, SpearData.SpearConfig.LockMask);
                 _hitSolidGround =
                     LayerUtils.IsInLayerMask(hit.collider.gameObject.layer, SpearData.SpearConfig.HardGroundMask);
+            }
+            else
+            {
+                SpearData.AudioSource.PlayOneShot(Settings.SpecialSound2);
             }
             
         }

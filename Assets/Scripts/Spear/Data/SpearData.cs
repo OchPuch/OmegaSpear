@@ -23,7 +23,7 @@ namespace Spear.Data
         public float Scale => SpearScaler.GetScale();
 
 
-        public float umbrellaCharge { get; private set; }
+        public float UmbrellaCharge { get; private set; }
         public float loadTimer;
 
         public void Init()
@@ -38,10 +38,17 @@ namespace Spear.Data
             ShrinkRequest = Input.GetMouseButton(1);
         }
 
+        public float GetDamage()
+        {
+            var velocityProject=  Vector3.Project(Player.PlayerData.ControlledCollider.GetVelocity(), SpearScaler.HandlePoint.right);
+            return Mathf.Clamp(velocityProject.magnitude * SpearConfig.DamageBySpeedMultiplier, 0,
+                SpearConfig.MaxDamage); 
+        }
+
         public void AddUmbrellaCharge(float add)
         {
-            umbrellaCharge += add;
-            umbrellaCharge = Mathf.Clamp(umbrellaCharge, 0, SpearConfig.UmbrellaMaxTimeCharge);
+            UmbrellaCharge += add;
+            UmbrellaCharge = Mathf.Clamp(UmbrellaCharge, 0, SpearConfig.UmbrellaMaxTimeCharge);
         }
 
         public void SaveLastInput()
