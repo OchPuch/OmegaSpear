@@ -11,7 +11,8 @@ namespace Spear.States
         private SpearStateSettings Settings => SpearData.SpearConfig.NormalSettings;
         private float _holdShrinkTime;
         private float _holdExpandTime;
-        
+
+        private bool _startWithShrink;
         private bool _consistentShrink;
         private bool _stopped;
 
@@ -38,6 +39,7 @@ namespace Spear.States
 
             _consistentShrink = false;
             _stopped = true;
+            _startWithShrink = SpearData.ShrinkRequest;
         }
 
 
@@ -54,51 +56,56 @@ namespace Spear.States
         public override void UpdateScale()
         {
             float scaleFactor = 0;
-            
+
             if (SpearData.TipPoint.IsLocked)
             {
                 var projectedVelocity = Vector3.Project(SpearData.Player.PlayerData.ControlledCollider.GetVelocity(),
                     SpearData.SpearScaler.HandlePoint.up);
                 SpearData.Player.PlayerData.ControlledCollider.SetVelocity(projectedVelocity);
-                
+
                 if (!SpearData.ShrinkRequest)
                 {
                     _holdShrinkTime = 0;
                 }
-                
+
+                if (!SpearData.ShrinkRequest) _startWithShrink = false;
                 if (SpearData.ShrinkRequest && !SpearData.ExpandRequest)
                 {
                     _holdShrinkTime += Time.deltaTime;
                     if (SpearData.TipPoint.IsInHardGround)
                     {
-                        var velocityToPoint = SpearData.SpearScaler.HandlePoint.right * (Config.StuckShrinkSpeedMultiplier * ShrinkFactor) / Time.deltaTime;
+                        var velocityToPoint = SpearData.SpearScaler.HandlePoint.right *
+                            (Config.StuckShrinkSpeedMultiplier * ShrinkFactor) / Time.deltaTime;
                         var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
-                        SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityToPoint);
+                        var tipVelocity = SpearData.TipPoint.PositionDelta;
+                        SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity +
+                            (Vector2)velocityToPoint + tipVelocity);
                     }
-                    else if (_holdShrinkTime > Config.ShrinkHoldTimeToUnlock)
+                    else if (_holdShrinkTime > Config.ShrinkHoldTimeToUnlock && !_startWithShrink)
                     {
                         SpearData.TipPoint.UnLock();
                     }
                 }
-                
+
                 if (SpearData.Scale <= Config.UnstuckFromGroundScale)
                 {
                     SpearData.TipPoint.UnLock();
                 }
-                
+
                 return;
             }
-            
+
             if (SpearData.ExpandRequest && SpearData.ShrinkRequest)
             {
                 if (SpearData.TipPoint.CanBeLocked)
                 {
                     SpearData.TipPoint.Lock();
                 }
+
                 return;
             }
-            
-            
+
+
             if (SpearData.Scale < Settings.MinShrink)
             {
                 scaleFactor += ExpandFactor;
@@ -108,7 +115,7 @@ namespace Spear.States
             {
                 scaleFactor -= ShrinkFactor;
             }
-            
+
             if (SpearData.ExpandRequest)
             {
                 if (!SpearData.ShrinkRequest) _stopped = false;

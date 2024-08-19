@@ -30,7 +30,6 @@ namespace GlobalManagers
             {
                 Paused = null;
                 Resumed = null;
-                Debug.LogError("Pause manager got destroyed!");
                 Instance = null;
             }
         }

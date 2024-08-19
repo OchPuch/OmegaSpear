@@ -1,3 +1,4 @@
+using System;
 using CommonObjects;
 using NUnit.Framework;
 using Spear.Data;
@@ -13,12 +14,12 @@ namespace Spear
         private Transform _lastOtherObject;
         private float _lockedScale;
         private bool _forceLocked;
-        
+        private Vector2 _lastPosition;
+
         public bool IsInHardGround { get; private set; }
         public bool CanBeLocked { get; private set; }
         public bool IsLocked { get; private set; }
-        
-       
+        public Vector2 PositionDelta => (Vector2) transform.position - _lastPosition;
 
         public void Init(SpearData spearData)
         {
@@ -52,7 +53,12 @@ namespace Spear
             vector3.z = 0f;
             transform.localPosition = vector3;
         }
-        
+
+        private void LateUpdate()
+        {
+            _lastPosition = transform.position;
+        }
+
         private void OnTriggerStay(Collider other)
         {
             if (LayerUtils.IsInLayerMask(other.gameObject.layer, _data.SpearConfig.HardGroundMask))

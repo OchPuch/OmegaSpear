@@ -1,5 +1,4 @@
 using CommonObjects;
-using Sirenix.OdinInspector;
 using Spear.Data;
 using Spear.States.General;
 using StateMachine;
