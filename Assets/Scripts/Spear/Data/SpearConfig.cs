@@ -10,11 +10,11 @@ namespace Spear.Data
         [field: Header("General")]
         [field: SerializeField] public float DamageBySpeedMultiplier { get; private set; }
         [field: SerializeField] public float MaxDamage { get; private set; }
-
         [field: SerializeField] public LayerMask HitMask { get; private set; }
         [field: SerializeField] public LayerMask LockMask { get; private set; }
         [field: SerializeField] public LayerMask HardGroundMask { get; private set; }
         [field: SerializeField] public float ImpulsePlayerSpeed { get; private set; }
+        [field: SerializeField] public float ImpulseRadius { get; private set; }
         [field: SerializeField] public AnimationCurve ImpulseScaleByCharge { get; private set; }
         [field: SerializeField] public float MaxImpulseChargeTime { get; private set; }
         [field: SerializeField] public float ShrinkHoldTimeToUnlock { get; private set; }

@@ -1,5 +1,6 @@
 using System;
 using CommonObjects;
+using EnvironmentObjects;
 using NUnit.Framework;
 using Spear.Data;
 using UnityEngine;
@@ -57,6 +58,14 @@ namespace Spear
         private void LateUpdate()
         {
             _lastPosition = transform.position;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.Damage(_data.GetDamage());
+            }
         }
 
         private void OnTriggerStay(Collider other)

@@ -1,4 +1,6 @@
-﻿using Effects;
+﻿using System.Collections.Generic;
+using Effects;
+using EnvironmentObjects;
 using Spear.Data;
 using Spear.States.General;
 using StateMachine;
@@ -61,24 +63,31 @@ namespace Spear.States
             Vector2 spawnEffectPosition = SpearData.SpearScaler.TipPoint.position;
             float impulseScale =
                 Config.ImpulseScaleByCharge.Evaluate(SpearData.loadTimer / Config.MaxImpulseChargeTime);
+            float force = SpearData.SpearConfig.ImpulsePlayerSpeed * impulseScale;
             if (Physics.Raycast(SpearData.CenterTransform.position, SpearData.CenterTransform.right, out var hit, Settings.MaxExpand, SpearData.SpearConfig.HitMask))
             {
-                float force = SpearData.SpearConfig.ImpulsePlayerSpeed * impulseScale;
                 spawnEffectPosition = hit.point;
-                
-                if (hit.collider.TryGetComponent<Rigidbody>(out var rb))
-                {
-                    if (!rb.isKinematic)
-                    {
-                        force /= 2;
-                        rb.AddForce(SpearData.CenterTransform.right * force, ForceMode.Impulse);
-                    }
-                }
-                
                 var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
                 currentVelocity.y = 0f;
                 currentVelocity +=  (Vector2) (-SpearData.CenterTransform.right) * force;
                 SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
+            }
+
+            var colliders = (Physics.OverlapSphere(spawnEffectPosition, Config.ImpulseRadius, Config.HitMask));
+            foreach (var col in colliders)
+            {
+                if (col.TryGetComponent<Rigidbody>(out var rb))
+                {
+                    if (!rb.isKinematic)
+                    {
+                        rb.AddForce((col.transform.position - SpearData.CenterTransform.position) * force, ForceMode.Impulse);
+                    }
+                }
+
+                if (col.TryGetComponent<ICrushable>(out var crushable))
+                {
+                    crushable.Crush();
+                }
             }
             
             var particle = _particleFactory.CreateParticleSystem(spawnEffectPosition);
