@@ -76,17 +76,16 @@ namespace Spear.States
             var colliders = (Physics.OverlapSphere(spawnEffectPosition, Config.ImpulseRadius, Config.HitMask));
             foreach (var col in colliders)
             {
-                if (col.TryGetComponent<Rigidbody>(out var rb))
+                if (col.TryGetComponent<ICrushable>(out var crushable))
+                {
+                    crushable.Crush((SpearData.SpearScaler.HandlePoint.transform.right) * force );
+                }
+                else if (col.TryGetComponent<Rigidbody>(out var rb))
                 {
                     if (!rb.isKinematic)
                     {
-                        rb.AddForce((col.transform.position - SpearData.CenterTransform.position) * force, ForceMode.Impulse);
+                        rb.AddForce((SpearData.SpearScaler.HandlePoint.transform.right) * force, ForceMode.Impulse);
                     }
-                }
-
-                if (col.TryGetComponent<ICrushable>(out var crushable))
-                {
-                    crushable.Crush();
                 }
             }
             

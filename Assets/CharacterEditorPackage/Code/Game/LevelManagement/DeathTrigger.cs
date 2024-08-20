@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GlobalManagers;
+
 //--------------------------------------------------------------------
 //When the player enters, respawn them
 //--------------------------------------------------------------------
@@ -14,10 +16,7 @@ public class DeathTrigger : MonoBehaviour {
             if (controlledCapsuleCollider.AreCollisionsActive())
             { 
                 Debug.Log("Death triggered by: " + transform.name);
-                if (InSceneLevelSwitcher.Get())
-                {
-                    InSceneLevelSwitcher.Get().Respawn();
-                }
+                LevelManager.Instance.LoadCheckpoint(CheckpointManager.Instance.GetLastCheckpoint());
             }
         }
     }

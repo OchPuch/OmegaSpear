@@ -42,6 +42,12 @@ namespace Spear.States
             _startWithShrink = SpearData.ShrinkRequest;
         }
 
+        public override void Update()
+        {
+            if (SpearData.poor) return;
+            base.Update();
+        }
+
 
         public override void HandleRotation()
         {
@@ -55,8 +61,8 @@ namespace Spear.States
 
         public override void UpdateScale()
         {
+            if (SpearData.poor) return;
             float scaleFactor = 0;
-
             if (SpearData.TipPoint.IsLocked)
             {
                 var projectedVelocity = Vector3.Project(SpearData.Player.PlayerData.ControlledCollider.GetVelocity(),

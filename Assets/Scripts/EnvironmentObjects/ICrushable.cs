@@ -1,7 +1,9 @@
-﻿namespace EnvironmentObjects
+﻿using UnityEngine;
+
+namespace EnvironmentObjects
 {
     public interface ICrushable
     {
-        public void Crush();
+        public void Crush(Vector2 crushDirection);
     }
 }

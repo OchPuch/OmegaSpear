@@ -6,6 +6,7 @@ namespace Spear.Data
     [Serializable]
     public class SpearData
     {
+        public bool poor;
         public float desiredRotation;
         [field: SerializeField] public SpearConfig SpearConfig { get; private set; }
         [field: SerializeField] public Player.Player Player { get; private set; }

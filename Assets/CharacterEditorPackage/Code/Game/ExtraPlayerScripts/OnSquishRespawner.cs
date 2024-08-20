@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GlobalManagers;
+
 //--------------------------------------------------------------------
 //Detects when the capsule is being squished (using CapsuleVolumeIntegrity) and attempts to respawn
 //Use timer to prevent overzealous respawning
@@ -31,6 +33,6 @@ public class OnSquishRespawner : MonoBehaviour {
 
     void Respawn()
     {
-        UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+        LevelManager.Instance.LoadCheckpoint(CheckpointManager.Instance.GetLastCheckpoint());
     }
 }
