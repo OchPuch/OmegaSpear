@@ -3,6 +3,7 @@ using CommonObjects;
 using GlobalManagers;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Utils;
 
 namespace EnvironmentObjects
 {
@@ -13,11 +14,23 @@ namespace EnvironmentObjects
         [SerializeField] private Transform lightObject;
         [SerializeField] private float restoreTime;
         [SerializeField] private Rigidbody rb;
+
         [SerializeField] private bool infinitePushes;
-        
+        [SerializeField] private bool inverse;
         [SerializeField] private DirectionAllowed directionAllowed;
         [SerializeField] private bool fixedVelocity;
-        [ShowIf("fixedVelocity")] [SerializeField] private float constVelocity;
+        [ShowIf("fixedVelocity")] 
+        [SerializeField] private float constVelocity;
+        [SerializeField] private float minVelocity;
+
+        [Header("Arrow Visuals")] 
+        [SerializeField] private Color inverseColor;
+        [SerializeField] private Color normalColor;
+        [SerializeField] private SpriteRenderer mixedArrow;
+        [SerializeField] private SpriteRenderer anyDirectionArrow;
+        [SerializeField] private SpriteRenderer directionArrow;
+        [SerializeField] private SpriteRenderer doubleDirectionArrow;
+        [SerializeField] private SpriteRenderer infiniteArrow;
         
         private bool _crushed;
         private bool _stopped;
@@ -25,7 +38,8 @@ namespace EnvironmentObjects
         private float _restoreTimer;
         private Vector3 _startPosition;
         private Vector3 _stoppedPosition;
-        
+
+        private Vector2 _velocityCrushedWith;
         
         protected override void Start()
         {
@@ -41,15 +55,54 @@ namespace EnvironmentObjects
                 {
                     lightObject.gameObject.SetActive(false);
                 }
-                
             }
+
+            InitArrows();
+
+        }
+
+        private void InitArrows()
+        {
+            mixedArrow.gameObject.SetActive(false);
+            doubleDirectionArrow.gameObject.SetActive(false);
+            anyDirectionArrow.gameObject.SetActive(false);
+            directionArrow.gameObject.SetActive(false);
+            
+            infiniteArrow.gameObject.SetActive(restorable);
+            SpriteRenderer arrow;
+            switch (directionAllowed)
+            {
+                case DirectionAllowed.Any:
+                    arrow = anyDirectionArrow;
+                    break;
+                case DirectionAllowed.Right or DirectionAllowed.Up:
+                    arrow = inverse ? mixedArrow : doubleDirectionArrow;
+                    break;
+                default:
+                    arrow = directionArrow;
+                    break;
+            }
+
+            switch (directionAllowed)
+            {
+                case DirectionAllowed.Right:
+                    arrow.transform.right = transform.right;
+                    break;
+                case DirectionAllowed.Up:
+                    arrow.transform.up = transform.up;
+                    break;
+            }
+            
+            arrow.gameObject.SetActive(true);
+            arrow.color = inverse ? inverseColor : normalColor;
 
         }
 
         private void Update()
         {
-            if (_crushed && restorable && _stopped)
-            {
+            if (restorable && _stopped)
+            { 
+                _restoreTimer += Time.deltaTime;
                 if (_restoreTimer > restoreTime)
                 {
                     _restoreTimer = 0f;
@@ -62,20 +115,38 @@ namespace EnvironmentObjects
 
         private void FixedUpdate()
         {
-            if (_crushed && restorable && _stopped)
+            if (restorable && _stopped)
             {
-                _restoreTimer += Time.deltaTime;
                 transform.position = Vector3.Lerp(_stoppedPosition, _startPosition,
                     positionLerp.Evaluate(_restoreTimer / restoreTime));
             }
+            else
+            {
+                if (_crushed)
+                {
+                    switch (directionAllowed)
+                    {
+                        case DirectionAllowed.Any:
+                            break;
+                        case DirectionAllowed.Right:
+                            rb.linearVelocity = Vector3.Project(rb.linearVelocity, transform.right);
+                            break;
+                        case DirectionAllowed.Up:
+                            rb.linearVelocity = Vector3.Project(rb.linearVelocity, transform.up);
+                            break;
+                    }
+
+                }
+            }
         }
         
-
         public void Crush(Vector2 crushDirection)
         {
-            if (_crushed) return;
-            rb.isKinematic = false;
-            _stopped = false;
+            if (_crushed)
+            {
+                if (!infinitePushes) return;
+            }
+            if (inverse) crushDirection = -crushDirection;
             switch (directionAllowed)
             {
                 case DirectionAllowed.Any:
@@ -92,7 +163,26 @@ namespace EnvironmentObjects
             {
                 crushDirection = crushDirection.normalized * constVelocity;
             }
+
+            if (crushDirection == Vector2.zero)
+            {
+                
+                switch (directionAllowed)
+                {
+                    case DirectionAllowed.Any:
+                        break;
+                    case DirectionAllowed.Right:
+                        crushDirection = transform.right;
+                        break;
+                    case DirectionAllowed.Up:
+                        crushDirection = Vector3.Project(crushDirection, transform.up);
+                        break;
+                }
+            }
             
+            rb.isKinematic = false;
+            _stopped = false;
+            _velocityCrushedWith = crushDirection;
             rb.AddForce(crushDirection, ForceMode.Impulse);
             _crushed = true;
         }
@@ -107,7 +197,6 @@ namespace EnvironmentObjects
                     rb.isKinematic = true;
                     _stopped = true;
                     _stoppedPosition = transform.position;
-                    if (infinitePushes) _crushed = false;
                 }
             }
         }
