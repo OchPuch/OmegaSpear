@@ -1,7 +1,5 @@
-using System;
 using GlobalManagers;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
@@ -10,8 +8,7 @@ namespace CustomGUI
 {
     public class PauseMenu : MonoBehaviour
     {
-        public AudioMixer audioMixer;
-        public GameObject pauseMenu;
+        [SerializeField] private GameObject pauseMenu;
         [SerializeField] private SceneField mainMenu;
         [SerializeField] private Button restartButton;
         [SerializeField] private bool allowRestart = true;
@@ -21,11 +18,8 @@ namespace CustomGUI
 
         private void Start()
         {
-            sfx.value = PlayerPrefs.GetFloat("SFX", 0.9f);
-            music.value = PlayerPrefs.GetFloat("Music", 0.9f);
-        
-            UpdateMusicVolume(music);
-            UpdateSfxVolume(sfx);
+            sfx.value = SoundManager.Instance.GetSoundEffectsVolume01();
+            music.value = SoundManager.Instance.GetMusicVolume01();
 
             restartButton.interactable = allowRestart;
             pauseMenu.SetActive(PauseManager.Instance.IsPaused);
@@ -74,24 +68,20 @@ namespace CustomGUI
             }
             PauseManager.Instance.Resume();
         }
-        
-        public void UpdateSfxVolume(Slider slider)
-        {
-            float volume = Mathf.Lerp(-80f, -20f, slider.value);
-            audioMixer.SetFloat("SFX", volume);
-            PlayerPrefs.SetFloat("SFX", slider.value);
-        }
-
-        public void UpdateMusicVolume(Slider slider)
-        {
-            float volume = Mathf.Lerp(-80f, -20f, slider.value);
-            audioMixer.SetFloat("Music", volume);
-            PlayerPrefs.SetFloat("Music", slider.value);
-        }
 
         public void DeleteSaves()
         {
             PlayerPrefs.DeleteAll();
+        }
+
+        public void UpdateSoundEffectsVolume(Slider slider)
+        {
+            SoundManager.Instance.UpdateSfxVolume(slider.value);
+        }
+        
+        public void UpdateMusicVolume(Slider slider)
+        {
+            SoundManager.Instance.UpdateMusicVolume(slider.value);
         }
 
 

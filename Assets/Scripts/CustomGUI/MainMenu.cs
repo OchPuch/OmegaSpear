@@ -9,9 +9,7 @@ namespace CustomGUI
 {
     public class MainMenu : MonoBehaviour
     {
-        [SerializeField] private MusicManager musicManager;
         [SerializeField] private MusicSwitchData musicSwitchData;
-        [SerializeField] private CheckpointManager checkpointManager;
         [SerializeField] private Button continueButton;
         [Header("Scenes")]
         [SerializeField] private SceneField persistentScene;
@@ -20,7 +18,7 @@ namespace CustomGUI
         [SerializeField] private SceneField persistentPoor;
         [SerializeField] private SceneField tutorialScene;
 
-        private void Awake()
+        private void Start()
         {
             if (string.IsNullOrEmpty(PlayerPrefs.GetString("PlayerName")))
             {
@@ -29,12 +27,7 @@ namespace CustomGUI
             }
             else
             {
-                musicManager.Init();
-                
-                
-                if (checkpointManager is null) return;
-                 checkpointManager.Init();
-                if (!checkpointManager.LoadCheckpoint())
+                if (!CheckpointManager.Instance.LoadCheckpoint())
                 {
                     continueButton.interactable = false;
                 }
@@ -52,7 +45,7 @@ namespace CustomGUI
         { 
             MusicManager.Instance.SwitchMusic(musicSwitchData);
             SceneManager.LoadScene(persistentScene);
-            SceneManager.LoadScene(checkpointManager.GetLastCheckpoint().sceneName, LoadSceneMode.Additive);
+            SceneManager.LoadScene(CheckpointManager.Instance.GetLastCheckpoint().sceneName, LoadSceneMode.Additive);
         }
         
         private void LoadTutorial()
