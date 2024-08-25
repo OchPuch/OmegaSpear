@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace EnvironmentObjects
+namespace EnvironmentObjects.Crushable
 {
     public interface ICrushable
     {

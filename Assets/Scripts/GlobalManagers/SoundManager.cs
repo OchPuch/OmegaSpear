@@ -20,6 +20,8 @@ namespace GlobalManagers
                 Instance = this;
                 transform.SetParent(null);
                 DontDestroyOnLoad(this);
+                UpdateSfxVolume(GetSoundEffectsVolume01());
+                UpdateMusicVolume(GetMusicVolume01());
             }
             else if (Instance != null)
             {

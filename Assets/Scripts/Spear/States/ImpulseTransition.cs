@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Effects;
 using EnvironmentObjects;
+using EnvironmentObjects.Crushable;
 using Spear.Data;
 using Spear.States.General;
 using StateMachine;
@@ -70,6 +71,7 @@ namespace Spear.States
                 var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
                 currentVelocity.y = 0f;
                 currentVelocity +=  (Vector2) (-SpearData.CenterTransform.right) * force;
+                
                 SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
             }
 
@@ -79,13 +81,6 @@ namespace Spear.States
                 if (col.TryGetComponent<ICrushable>(out var crushable))
                 {
                     crushable.Crush((SpearData.SpearScaler.HandlePoint.transform.right) * force );
-                }
-                else if (col.TryGetComponent<Rigidbody>(out var rb))
-                {
-                    if (!rb.isKinematic)
-                    {
-                        rb.AddForce((SpearData.SpearScaler.HandlePoint.transform.right) * force, ForceMode.Impulse);
-                    }
                 }
             }
             
