@@ -20,6 +20,8 @@ namespace Spear.Data
         [field: SerializeField] public float ShrinkHoldTimeToUnlock { get; private set; }
         [field: SerializeField] public float UnstuckFromGroundScale { get; private set; }
         [field: SerializeField] public float StuckShrinkSpeedMultiplier { get; private set; }
+        [field: SerializeField] public float StuckExpandSpeedMultiplier { get; private set; }
+        [field: SerializeField] public float ExtraStuckSize { get; private set; }
         [field: SerializeField] public float UmbrellaDoubleJump { get; private set; }
         [field: SerializeField] public float TimeToMaxUmbrellaDoubleJump { get; private set; }
         [field: SerializeField] public float UmbrellaYSpeed { get; private set; }

@@ -13,7 +13,7 @@ namespace Spear
         [field: SerializeField] public Transform BodyTransform { get; private set; }
 
         private SpearData _data;
-        
+
         private float _maxExpandScale = 5f;
         private float _minExpandScale = 0.02f;
         private float _baseScale = 1f;
@@ -33,9 +33,8 @@ namespace Spear
         {
             if (_data.TipPoint.IsLocked)
             {
-                CenterPoint.transform.right =  (Vector2) (TipPoint.transform.position - HandlePoint.transform.position);
+                CenterPoint.transform.right = (Vector2)(TipPoint.transform.position - HandlePoint.transform.position);
                 UpdateBodySize();
-
             }
             else
             {
@@ -50,8 +49,11 @@ namespace Spear
 
         public void ChangeScale(float value, float expandMin, float expandMax)
         {
+            if (value == 0)
+                return;
+            
             float currentScale = GetScale();
-
+            
             if (value < 0)
             {
                 if (currentScale + value > expandMax)
@@ -66,7 +68,20 @@ namespace Spear
                 {
                     return;
                 }
-                
+
+                // if (Physics.Raycast(_data.SpearScaler.HandlePoint.position, _data.SpearScaler.CenterPoint.right, out var hit,
+                //         _data.SpearConfig.NormalSettings.MaxExpand, _data.SpearConfig.HitMask))
+                // {
+                //     float maximumScale = Vector2.Distance(HandlePoint.position, hit.point);
+                //     if (maximumScale < currentScale + value)
+                //     {
+                //         if (currentScale < maximumScale)
+                //         {
+                //             return;
+                //         }
+                //     }
+                // }
+
                 if (currentScale + value < expandMin)
                     expandMin = currentScale + value;
                 else if (currentScale + value >= expandMax)
@@ -107,7 +122,7 @@ namespace Spear
                 UpdateBodySize();
             }
         }
-        
+
         public void UpdateFat(float scale)
         {
             var vector3 = BodyTransform.localScale;
@@ -115,7 +130,7 @@ namespace Spear
             BodyTransform.localScale = vector3;
         }
 
-        private void UpdateBodySize()
+        public void UpdateBodySize()
         {
             var currentScale = GetScale();
             BodyTransform.position = HandlePoint.position + HandlePoint.right * currentScale / 2;

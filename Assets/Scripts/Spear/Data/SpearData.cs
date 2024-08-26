@@ -27,10 +27,10 @@ namespace Spear.Data
         public float UmbrellaCharge { get; private set; }
         public float loadTimer;
 
-        public void Init()
+        public void Init(Spear spear)
         {
             SpearScaler.Init(this);
-            TipPoint.Init(this);
+            TipPoint.Init(this, spear);
         }
 
         public void UpdateInput()

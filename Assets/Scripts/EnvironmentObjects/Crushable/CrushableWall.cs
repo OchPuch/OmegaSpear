@@ -50,7 +50,6 @@ namespace EnvironmentObjects.Crushable
                     lightObject.gameObject.SetActive(false);
                 }
             }
-
             InitArrows();
         }
         
@@ -133,9 +132,11 @@ namespace EnvironmentObjects.Crushable
                     break;
                 case DirectionAllowed.Right:
                     crushDirection = Vector3.Project(crushDirection, transform.right);
+                    if (onlyForward) crushDirection = transform.right;
                     break;
                 case DirectionAllowed.Up:
                     crushDirection = Vector3.Project(crushDirection, transform.up);
+                    if (onlyForward) crushDirection = transform.up;
                     break;
             }
             var crushVelocity = crushDirection.normalized * constVelocity;

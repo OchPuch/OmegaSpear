@@ -69,15 +69,10 @@ namespace Spear.States
                     SpearData.SpearScaler.HandlePoint.up);
                 SpearData.Player.PlayerData.ControlledCollider.SetVelocity(projectedVelocity);
 
-                if (!SpearData.ShrinkRequest)
-                {
-                    _holdShrinkTime = 0;
-                }
 
                 if (!SpearData.ShrinkRequest) _startWithShrink = false;
                 if (SpearData.ShrinkRequest && !SpearData.ExpandRequest)
                 {
-                    _holdShrinkTime += Time.deltaTime;
                     if (SpearData.TipPoint.IsInHardGround)
                     {
                         var velocityToPoint = SpearData.SpearScaler.HandlePoint.right *
@@ -91,7 +86,14 @@ namespace Spear.States
                     {
                         SpearData.TipPoint.UnLock();
                     }
+                    _holdShrinkTime += Time.deltaTime;
+
                 }
+                else
+                {
+                    _holdShrinkTime = 0;
+                }
+                
 
                 if (SpearData.Scale <= Config.UnstuckFromGroundScale)
                 {
@@ -122,7 +124,7 @@ namespace Spear.States
                 scaleFactor -= ShrinkFactor;
             }
 
-            if (SpearData.ExpandRequest)
+            if (SpearData.ExpandRequest && SpearData.TipPoint.CanExpand)
             {
                 if (!SpearData.ShrinkRequest) _stopped = false;
                 scaleFactor += ExpandFactor;

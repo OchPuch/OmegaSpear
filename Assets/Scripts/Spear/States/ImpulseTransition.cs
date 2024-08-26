@@ -69,7 +69,7 @@ namespace Spear.States
             {
                 spawnEffectPosition = hit.point;
                 var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
-                currentVelocity.y = 0f;
+                if (currentVelocity.y < 0)  currentVelocity.y = 0f;
                 currentVelocity +=  (Vector2) (-SpearData.CenterTransform.right) * force;
                 
                 SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity);
