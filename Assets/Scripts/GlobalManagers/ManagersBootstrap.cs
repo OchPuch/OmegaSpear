@@ -1,3 +1,5 @@
+using Levels;
+using Saving;
 using UnityEngine;
 
 namespace GlobalManagers
@@ -15,9 +17,9 @@ namespace GlobalManagers
         private void Awake()
         {
             if (pauseManager) pauseManager.Init();
+            if (levelManager) levelManager.Init();
             if (timeManager) timeManager.Init();
             if (environmentObjectsManager) environmentObjectsManager.Init();
-            if (levelManager) levelManager.Init();
             if (soundManager) soundManager.Init();
             if (musicManager) musicManager.Init();
             if (checkpointManager) checkpointManager.Init();

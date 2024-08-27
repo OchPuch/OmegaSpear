@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GlobalManagers;
+using Levels;
+using Saving;
 
 //--------------------------------------------------------------------
 //When the player enters, respawn them
@@ -16,7 +18,14 @@ public class DeathTrigger : MonoBehaviour {
             if (controlledCapsuleCollider.AreCollisionsActive())
             { 
                 Debug.Log("Death triggered by: " + transform.name);
-                LevelManager.Instance.LoadCheckpoint(CheckpointManager.Instance.GetLastCheckpoint());
+                if (CheckpointManager.Instance.TryGetLastCheckPoint(out var data))
+                {
+                    LevelManager.Instance.LoadCheckpoint(data);
+                }
+                else
+                {
+                    LevelManager.Instance.LoadNewLevel(LevelManager.Instance.LastLoadedLevel);
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ namespace Saving
     {
         public string sceneName;
         public CharacterSaveData characterSaveData;
+        public float seconds;
         
         [Serializable]
         public struct CharacterSaveData

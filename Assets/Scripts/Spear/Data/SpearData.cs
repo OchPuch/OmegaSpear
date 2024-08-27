@@ -31,6 +31,7 @@ namespace Spear.Data
         {
             SpearScaler.Init(this);
             TipPoint.Init(this, spear);
+            AddUmbrellaCharge(999);
         }
 
         public void UpdateInput()

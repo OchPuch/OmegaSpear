@@ -2,7 +2,7 @@
 
 namespace Player.Data
 {
-    [CreateAssetMenu(menuName = "Player/BaseConfig", fileName = "Player Config")]
+    [CreateAssetMenu(menuName = "OMEGA_SPEAR/Player/BaseConfig", fileName = "Player Config")]
     public class PlayerConfig : ScriptableObject
     {
         [field: SerializeField] public int MaxHealth { get; private set; }

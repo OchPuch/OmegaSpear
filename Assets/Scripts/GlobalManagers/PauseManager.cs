@@ -21,6 +21,8 @@ namespace GlobalManagers
                 return;
             }
 
+            transform.SetParent(null);
+            DontDestroyOnLoad(this);
             Instance = this;
         }
 

@@ -39,8 +39,6 @@ namespace Spear.States
 
         public override void UpdateScale()
         {
-            float scaleFactor = 0;
-
             if (!Input.GetKey(KeyCode.LeftShift))
             {
                 StateSwitcher.SwitchState<FromUmbrellaToNormalTransition>();
@@ -52,8 +50,8 @@ namespace Spear.States
             var currentVelocity = SpearData.Player.PlayerData.ControlledCollider.GetVelocity();
             var velocityBaseAdd = (Vector2) (SpearData.SpearScaler.HandlePoint.right * (SpearData.SpearConfig.UmbrellaYSpeed * chargeScaleSpeed * Time.deltaTime));
             if (velocityBaseAdd.y < 0)  velocityBaseAdd.y = 0;
-            SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + (Vector2) velocityBaseAdd);
-            SpearData.SpearScaler.ChangeScale(scaleFactor, Settings.MinShrink, Settings.MaxExpand);
+            SpearData.Player.PlayerData.ControlledCollider.SetVelocity(currentVelocity + velocityBaseAdd);
+            SpearData.SpearScaler.SetScale(Settings.MaxExpand, Settings.MinShrink, Settings.MaxExpand);
             SpearData.SpearScaler.UpdateFat(Settings.FatingSpeedWhileExpanding.Evaluate(umbrellaCharge01));
             if (SpearData.Player.PlayerData.ControlledCollider.IsGrounded())
             {

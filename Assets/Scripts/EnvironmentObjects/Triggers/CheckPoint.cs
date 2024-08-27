@@ -22,11 +22,13 @@ namespace EnvironmentObjects.Triggers
                 CheckpointManager.Instance.DeleteCheckpoint();
                 return;
             }
+            
             var saveData = Player.Player.Instance.GetCharacterSaveData();
             CheckpointManager.Instance.SetCheckpoint(new SaveData
             {
                 sceneName = _sceneName,
                 characterSaveData = saveData,
+                seconds = TimeManager.Instance.LevelTimer
             });
         }
     }

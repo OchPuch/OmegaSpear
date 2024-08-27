@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Spear.Data
 {
-    [CreateAssetMenu(menuName = "Spear", fileName = "Spear Config")]
+    [CreateAssetMenu(menuName = "OMEGA_SPEAR/Spear", fileName = "Spear Config")]
     public class SpearConfig : ScriptableObject
     {
         [field: Header("General")]

@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GlobalManagers;
+using Levels;
+using Saving;
 
 //--------------------------------------------------------------------
 //Detects when the capsule is being squished (using CapsuleVolumeIntegrity) and attempts to respawn
