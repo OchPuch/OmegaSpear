@@ -1,4 +1,5 @@
 ﻿using System;
+using GlobalManagers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,10 +15,13 @@ namespace EnvironmentObjects
                 return;
             }
 
-            if (SceneManager.sceneCount > 2)
+            if (CheckpointManager.Instance.TryGetLastCheckPoint(out var saveData))
             {
-                Destroy(gameObject);
-                return;
+                if (saveData.sceneName == gameObject.scene.name || SceneManager.sceneCount > 2)
+                {
+                    Destroy(gameObject);
+                    return;
+                }
             }
             
             Player.Player.Instance.PlayerData.ControlledCollider.SetPosition(transform.position);

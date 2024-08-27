@@ -10,7 +10,10 @@ namespace CustomGUI
     public class MainMenu : MonoBehaviour
     {
         [SerializeField] private MusicSwitchData musicSwitchData;
+        [Header("Buttons")]
         [SerializeField] private Button continueButton;
+        [SerializeField] private Button startButton;
+        [SerializeField] private Button levelsButton;
         [Header("Scenes")]
         [SerializeField] private SceneField persistentScene;
         [SerializeField] private SceneField firstLevelScene;
@@ -30,12 +33,20 @@ namespace CustomGUI
                 if (!CheckpointManager.Instance.LoadCheckpoint())
                 {
                     continueButton.interactable = false;
+                    startButton.gameObject.SetActive(true);
+                    levelsButton.gameObject.SetActive(false);
+                }
+                else
+                {
+                    startButton.gameObject.SetActive(false);
+                    levelsButton.gameObject.SetActive(true);
                 }
             }
         }
 
         public void StartNewGame()
         {
+            CheckpointManager.Instance.DeleteCheckpoint();
             MusicManager.Instance.SwitchMusic(musicSwitchData);
             SceneManager.LoadScene(persistentScene);
             SceneManager.LoadScene(firstLevelScene, LoadSceneMode.Additive);
