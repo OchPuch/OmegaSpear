@@ -34,6 +34,8 @@ namespace GeneralUI
             {
                 startButton.gameObject.SetActive(false);
             }
+
+            continueButton.interactable = CheckpointManager.Instance.TryGetLastCheckPoint(out var _);
         }
 
         public void StartNewGame()

@@ -1,13 +1,16 @@
+using System;
+using EnvironmentObjects.Triggers;
 using GlobalManagers;
-using Saving;
 using UnityEngine;
 
-namespace EnvironmentObjects.Triggers
+namespace Saving
 {
     public class CheckPoint : PlayerTrigger
     {
         [SerializeField] private bool clearCheckpointsInstead;
         private string _sceneName;
+        private bool _set;
+        public event Action CheckPointSet;
         
         protected override void Start()
         {
@@ -17,6 +20,7 @@ namespace EnvironmentObjects.Triggers
 
         protected override void OnPlayerEnter(Collider player1)
         {
+            if (_set) return;
             if (clearCheckpointsInstead)
             {
                 CheckpointManager.Instance.DeleteCheckpoint();
@@ -29,7 +33,9 @@ namespace EnvironmentObjects.Triggers
                 sceneName = _sceneName,
                 characterSaveData = saveData,
                 seconds = TimeManager.Instance.LevelTimer
-            });
+            }); 
+            _set = true;
+            CheckPointSet?.Invoke();
         }
     }
 }
