@@ -36,7 +36,7 @@ namespace Levels.UI
         public void Init(LevelData data)
         {
             _data = data;
-            levelName.text = _data.name;
+            levelName.text = _data.LevelName;
             if (_data.LevelStatus is not LevelStatus.Locked)
             {
                 if (_data.PreviewImage) levelPreview.sprite = _data.PreviewImage;

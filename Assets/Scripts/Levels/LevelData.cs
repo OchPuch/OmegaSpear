@@ -10,7 +10,7 @@ namespace Levels
     {
         [field: SerializeField] public Sprite PreviewImage { get; private set; }
         [field: SerializeField] public Sprite PreviewSecretImage { get; private set; }
-        [field: SerializeField] public string Name { get; private set; }
+        [field: SerializeField] public string LevelName { get; private set; }
         [field: SerializeField] public SceneField Scene { get; private set; }
         [field: SerializeField] public MusicSwitchData MusicSwitchData { get; private set;} 
         [field: Header("Time")]
@@ -18,6 +18,9 @@ namespace Levels
         [field: SerializeField] public float Btime { get; private set; }
         [field: SerializeField] public float Atime { get; private set; }
         [field: SerializeField] public float Stime { get; private set; }
+        
+        [field: Header("Other Levels")]
+        [field: SerializeField] public LevelData[] UnlockLevels { get; private set; }
         
         private int _levelId;
         public int LevelId
